@@ -78,34 +78,40 @@ num_classes = 10
 device = utils.get_default_device() # device: CPU or GPU
 print("device: ", device)
 
+ckpt_path = "../ckpt/ckpt-latest.pt"
 model = models.Conv_model(input_size, out_size=num_classes) # Options: [Conv_model, MLP_model]
 utils.to_device(model, device) # move model into the same CPU/GPU device as dataloaders
-if(os.path.exists("../ckpt/ckpt-latest.pt")):
+if(os.path.exists(ckpt_path)):
     print("Loading previous ckpt...")
-    torch.load("../ckpt/ckpt-latest.pt")
+    model.load_state_dict(torch.load(ckpt_path))
 
 train_dataLoader = utils.DeviceDataLoader(train_loader, device) # wrap dataloder into device_dataloader
 valid_dataLoader = utils.DeviceDataLoader(val_loader, device) # wrap dataloder into device_dataloader
 
 # training details
 lr = 1e-3
-epoch = 100
+epoch = 10
 optimizer = torch.optim.SGD(model.parameters(), lr, momentum=0.9)
 criterion = nn.CrossEntropyLoss()
 
-# training process
+# eval initial model
+model.eval()
 history = [utils.evaluate(model, valid_dataLoader)]
 print(history)
+
+# train model
+model.train()
 history += utils.fit(epoch, lr, model, train_dataLoader, valid_dataLoader, optimizer, criterion)
 print(history)
-
-torch.save(model, "../ckpt/ckpt-latest.pt")
+torch.save(model.state_dict(), ckpt_path)
 
 """
 3. Validation 
 """
-
-
+# torch.load(model, ckpt_path)
+# history = [utils.evaluate(model, valid_dataLoader)]
+# print("VALIDATION RESULTS:")
+# print(history)
 
 """
 4. Inference

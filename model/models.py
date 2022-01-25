@@ -112,6 +112,11 @@ class Conv_model(nn.Module):
         epoch_acc = torch.stack(batch_accs).mean()      # Combine accuracies
         return {'val_loss': epoch_loss.item(), 'val_acc': epoch_acc.item()}
     
+    def inference_step(self,instance):
+        image, label = instance
+        out = self(image)
+        return out
+
     def epoch_end(self, epoch, result):
         print("Epoch [{}], val_loss: {:.4f}, val_acc: {:.4f}".format(epoch, result['val_loss'], result['val_acc']))
 
