@@ -23,8 +23,8 @@ class model_pipeline():
         1. Load data from the dataset folder
         """
         batch_size = 32
-        DATA_PATH = "./dataset/"
-        mat_files = glob.glob(DATA_PATH + "**/*.mat", recursive=True)
+        DATA_PATH = "./dataset"
+        mat_files = glob.glob(DATA_PATH + "/*.mat", recursive=True)
 
         train_data_list = []
         train_label_list = []
@@ -74,8 +74,8 @@ class model_pipeline():
 
         input_size = 3072
         num_classes = 10
-        self.ckpt_path = "./ckpt/ckpt-latest.pt"
         device = utils.get_default_device() # device: CPU or GPU
+        self.ckpt_path = f"./ckpt/ckpt-latest_{str(device)}.pt"
         print("device: ", device)
         self.model = models.Conv_model(input_size, out_size=num_classes) # Options: [Conv_model, MLP_model]
         utils.to_device(self.model, device) # move model into the same CPU/GPU device as dataloaders
@@ -106,8 +106,6 @@ class model_pipeline():
         hisotry = []
         history += utils.fit(epoch, self.lr, self.model, self.train_dataLoader, self.valid_dataLoader, self.optimizer, self.criterion)
         torch.save(self.model.state_dict(), self.ckpt_path)
-
-        return epoch
 
     """
     3. Validation 

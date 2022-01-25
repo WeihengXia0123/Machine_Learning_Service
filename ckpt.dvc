@@ -1,5 +1,5 @@
 outs:
-- md5: d751713988987e9331980363e24189ce.dir
-  size: 0
-  nfiles: 0
+- md5: b0222c4ac338ad26fa8b0f5e33147fe3.dir
+  size: 499266
+  nfiles: 2
   path: ckpt
