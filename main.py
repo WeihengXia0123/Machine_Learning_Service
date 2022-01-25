@@ -5,7 +5,9 @@ import subprocess, os
 app = FastAPI()
 
 # global variables
-app.i = 0
+app.last_epoch_number = 0
+app.loss_train = 0
+app.loss_valid = 0
 
 @app.post("/upload_data/{data_path: path}")
 async def upload_data(data_path: str):
@@ -15,14 +17,20 @@ async def upload_data(data_path: str):
     third party tools to version models and data (e.g: https://dvc.org)
     """
     # upload data to the Dataset folder
-    subprocess.run(["cp", data_path, "dataset"])
+    subprocess.run(["cp", data_path, "dataset/"])
 
     # dvc add and commit new dataset
-    
+    subprocess.run(["dvc", "add", "dataset/"], stdout=subprocess.PIPE)
+    subprocess.run(["git", "add", "dataset.dvc"], stdout=subprocess.PIPE)
 
-    # push to remote data storage
+    # git commit and push
+    subprocess.run(["git", "commit", "-m", f"test: add new dataset\n{data_path}"],stdout=subprocess.PIPE)
+    subprocess.run(["git", "push"],stdout=subprocess.PIPE)
 
-    return {"uploading data": data_path}
+    # dvc push to remote data storage (optional)
+    subprocess.run(["dvc", "push"])
+
+    return f"uploading data: {data_path}"
 
 
 @app.post("/start_training/")
@@ -30,6 +38,10 @@ async def start_training():
     """
     A POST request to start the training with the latest data version
     """
+    # dvc pull to get the latest data
+
+    # start the training
+
     return "start training.. "
 
 
