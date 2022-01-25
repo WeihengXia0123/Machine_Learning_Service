@@ -116,8 +116,8 @@ class Conv_model(nn.Module):
     def inference_step(self, data_path):
         # Load the intference data
         mat = scipy.io.loadmat(data_path)
-        data = mat['X'][:,:,:,0]
-        label = mat['y'][0]
+        data = mat['X'][:,:,:,2]
+        label = mat['y'][2]
         data_list = np.array(data)
         data_list = data_list.reshape(32,32,3,1)
         data_list = np.transpose(data_list,(3,2,0,1))
@@ -129,9 +129,10 @@ class Conv_model(nn.Module):
         label_list = label_list.astype(np.long) # convert labels to long type for cross-entropy loss
         label_list = label_list.reshape(label_list.shape[0])
         
-        print("infer_data shape: ", infer_data.shape)
+        print("Inference data shape: ", infer_data.shape)
         out = self(infer_data)
         _, prediction = torch.max(out, dim=1)
+        prediction = prediction.cpu().detach().numpy()
         return data, prediction
 
     def epoch_end(self, epoch, result):

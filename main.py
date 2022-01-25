@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 import subprocess, os
 import model.train as train
-
+import matplotlib.pyplot as plt
 app = FastAPI()
 
 # global variables
@@ -63,6 +63,7 @@ async def get_status():
     A GET request to retrieve the status of the training (last epoch number, and validation metrics).
     """
     # get validation result
+    print("VALIDATION RESULTS:")
     validation_result = pipeline.valid()
     validation_result.append({"curr_epoch": app.last_epoch_number})
     return validation_result
@@ -73,7 +74,10 @@ async def result(data_path : str):
     """
     An inference POST endpoint for a single data instance that returns the latest model results on it.
     """
+    print("INFERENCE RESULTS:")
     data_path = "/home/weiheng/Code/Coding_Interview/Peter_Park/Machine_Learning_Service/dataset/0_1000.mat"
     image, prediction = pipeline.infer(data_path)
-
-    return "the result of instance is .."
+    print("prediction result: ", prediction)
+    # plt.imshow(image)
+    # plt.show()
+    return {"prediction digit": str(prediction)}

@@ -113,7 +113,6 @@ class model_pipeline():
     3. Validation 
     """
     def valid(self):
-        print("VALIDATION RESULTS:")
         self.model.load_state_dict(torch.load(self.ckpt_path))
         history = [utils.evaluate(self.model, self.valid_dataLoader)]
         print(history)
@@ -123,10 +122,7 @@ class model_pipeline():
     4. Inference
     """
     def infer(self, data_path):
-        print("INFERENCE RESULT:")
         self.model.load_state_dict(torch.load(self.ckpt_path))
         image, predict = self.model.inference_step(data_path)
-        print(predict)
-
         return image, predict
         
