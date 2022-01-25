@@ -1,0 +1,23 @@
+FROM mls:v1
+
+WORKDIR /workspace
+
+RUN mkdir dataset
+RUN mkdir new_dataset
+RUN mkdir ckpt
+
+# VOLUME [ "/workspace/dataset" ]
+# VOLUME [ "/workspace/new_dataset" ]
+
+RUN ["conda", "run", "-n", "dvc_py38", "git", "init"]
+RUN ["conda", "run", "-n", "dvc_py38", "dvc", "init"]
+
+COPY . .
+RUN ["conda", "run", "-n", "dvc_py38", "python3", "model/preprocess/prepare_dataset.py"]
+
+RUN ["git","config", "--global", "user.email", "weiheng.xia@gmail.com"]
+RUN ["git","config", "--global", "user.name", "Weiheng Xia"]
+
+# The code to run when container is started:
+EXPOSE 8000
+ENTRYPOINT ["conda", "run", "-n", "dvc_py38", "--no-capture-output", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
