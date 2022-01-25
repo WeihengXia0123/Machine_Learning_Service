@@ -38,10 +38,11 @@ train_label_list = np.array(train_label_list)
 
 # replace labels of `10`` with `0`
 train_label_list[train_label_list==10] = 0
-train_label_list = train_label_list.astype(np.long)
+train_label_list = train_label_list.astype(np.long) # convert labels to long type for cross-entropy loss
 
 train_data_stacked = np.concatenate(train_data_list, axis=3)
-train_data_stacked = np.transpose(train_data_stacked, (3,0,1,2)) # (b, h, w, c)
+train_data_stacked = np.transpose(train_data_stacked, (3,2,0,1)) # (b, h, w, c) for MLP, (b, c, h, w) for Conv
+
 train_label_stacked = np.concatenate(train_label_list, axis=0)
 train_label_stacked = train_label_stacked.reshape(train_label_stacked.shape[0])
 
@@ -77,16 +78,35 @@ num_classes = 10
 device = utils.get_default_device() # device: CPU or GPU
 print("device: ", device)
 
-model = models.model(input_size, out_size=num_classes)
+model = models.Conv_model(input_size, out_size=num_classes) # Options: [Conv_model, MLP_model]
 utils.to_device(model, device) # move model into the same CPU/GPU device as dataloaders
+if(os.path.exists("../ckpt/ckpt-latest.pt")):
+    print("Loading previous ckpt...")
+    torch.load("../ckpt/ckpt-latest.pt")
+
 train_dataLoader = utils.DeviceDataLoader(train_loader, device) # wrap dataloder into device_dataloader
 valid_dataLoader = utils.DeviceDataLoader(val_loader, device) # wrap dataloder into device_dataloader
 
+# training details
+lr = 1e-3
+epoch = 100
+optimizer = torch.optim.SGD(model.parameters(), lr, momentum=0.9)
+criterion = nn.CrossEntropyLoss()
+
+# training process
 history = [utils.evaluate(model, valid_dataLoader)]
 print(history)
-history += utils.fit(1000,1e-2, model, train_dataLoader, valid_dataLoader)
+history += utils.fit(epoch, lr, model, train_dataLoader, valid_dataLoader, optimizer, criterion)
 print(history)
 
+torch.save(model, "../ckpt/ckpt-latest.pt")
+
 """
-3. Inference 
+3. Validation 
+"""
+
+
+
+"""
+4. Inference
 """
