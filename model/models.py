@@ -8,6 +8,7 @@ from torchvision.transforms import ToTensor
 from torchvision.utils import make_grid
 from torch.utils.data import random_split
 from torch.utils.data import TensorDataset, DataLoader
+import scipy.io
 
 class MLP_model(nn.Module):
     """Feedfoward neural network with 6 hidden layer"""
@@ -112,10 +113,26 @@ class Conv_model(nn.Module):
         epoch_acc = torch.stack(batch_accs).mean()      # Combine accuracies
         return {'val_loss': epoch_loss.item(), 'val_acc': epoch_acc.item()}
     
-    def inference_step(self,instance):
-        image, label = instance
-        out = self(image)
-        return out
+    def inference_step(self, data_path):
+        # Load the intference data
+        mat = scipy.io.loadmat(data_path)
+        data = mat['X'][:,:,:,0]
+        label = mat['y'][0]
+        data_list = np.array(data)
+        data_list = data_list.reshape(32,32,3,1)
+        data_list = np.transpose(data_list,(3,2,0,1))
+        data_list = data_list.astype(np.float32)/255.
+        infer_data = torch.from_numpy(data_list)
+
+        label_list = np.array(label)
+        label_list[label_list==10] = 0
+        label_list = label_list.astype(np.long) # convert labels to long type for cross-entropy loss
+        label_list = label_list.reshape(label_list.shape[0])
+        
+        print("infer_data shape: ", infer_data.shape)
+        out = self(infer_data)
+        _, prediction = torch.max(out, dim=1)
+        return data, prediction
 
     def epoch_end(self, epoch, result):
         print("Epoch [{}], val_loss: {:.4f}, val_acc: {:.4f}".format(epoch, result['val_loss'], result['val_acc']))
