@@ -7,11 +7,19 @@
 ```bash
 sudo docker build . -f dockerfile -t mls:v1
 sudo docker run -p 80:80 mls:v1
-# Then open 127.0.0.1:80/docs in your browser to test the functions
-
 # If you want to get inside the docker container, do the following:
-sudo docker exec -it [containerID] bash
+# sudo docker exec -it [containerID] bash
 ```
+
+## Test cases
+open 127.0.0.1:80/docs in your browser to test the functions:
+1. POST request to upload data, enter the path for new data that you want to add, \
+   example: **/workspace/new_dataset/73000_73257.mat**
+2. POST request to train the network, enter the num of epochs that you want to train,\
+   example: **10**
+3. GET request to get the current training status, total epochs + validation accuracy
+4. POST request to do inference on a data,\
+   example: **/workspace/new_dataset/41000_42000.mat**
 
 ## Dependencies
 See requirements.txt and environment.yaml
