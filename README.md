@@ -1,8 +1,5 @@
 # Machine_Learning_Service
-@brief \
-@author: Weiheng Xia
-
-(TODO: I will write in detail when I have more time after this week's 996 work~;)
+(TODO: I will write README in detail, when I have more time after this week's 996 work~;)
 
 ## Code structure
 
