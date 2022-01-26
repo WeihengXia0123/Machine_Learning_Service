@@ -1,14 +1,19 @@
 # Machine_Learning_Service
-@brief
+@brief \
 @author: Weiheng Xia
 
-(TODO: I will write in detail when I have more time after this week's work~)
+(TODO: I will write in detail when I have more time after this week's 996 work~;)
 
 ## Code structure
 
 ## How to run the code
 ```bash
-docker run remote:xxx
+sudo docker build . -f dockerfile -t mls:v1
+sudo docker run -p 80:80 mls:v1
+# Then open 127.0.0.1:80/docs in your browser to test the functions
+
+# If you want to get inside the docker container, do the following:
+sudo docker exec -it [containerID] bash
 ```
 
 ## Dependencies

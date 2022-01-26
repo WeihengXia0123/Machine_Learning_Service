@@ -45,7 +45,8 @@ async def start_training():
     """
     A POST request to start the training with the latest data version
     """
-    # dvc pull to get the latest data
+    # To get the latest data, you can do either `dvc pull` to sync with remote storage
+    # or, you can do `git checkout` to the latest git commitID, then `dvc checkout` to sync with local storage
     # subprocess.run(["dvc", "pull"])
 
     # start the training
@@ -60,6 +61,7 @@ async def start_training():
     # subprocess.run(["git", "push"],stdout=subprocess.PIPE)
     # subprocess.run(["dvc", "push"],stdout=subprocess.PIPE)
 
+    print("finished training with epochs: ", app.last_epoch_number)
     return "finished training"
 
 
@@ -81,8 +83,11 @@ async def result(data_path : str):
     An inference POST endpoint for a single data instance that returns the latest model results on it.
     """
     print("INFERENCE RESULTS:")
-    image, prediction = pipeline.infer(data_path)
+    image, prediction, label = pipeline.infer(data_path)
+    label = int(label[0])
+    prediction = int(prediction[0])
     print("prediction result: ", prediction)
-    plt.imshow(image)
-    plt.show()
-    return {"prediction digit": str(prediction)}
+    print("groundtruth label: ", label)
+    # plt.imshow(image)
+    # plt.show()
+    return [{"prediction digit": str(prediction)}, {"label", label}]

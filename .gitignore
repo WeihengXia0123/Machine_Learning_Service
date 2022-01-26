@@ -3,3 +3,5 @@ __pycache__/
 /ckpt
 /new_dataset
 /download
+
+.vscode/

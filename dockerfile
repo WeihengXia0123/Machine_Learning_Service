@@ -42,5 +42,5 @@ RUN ["git","config", "--global", "user.email", "weiheng.xia@gmail.com"]
 RUN ["git","config", "--global", "user.name", "Weiheng Xia"]
 
 # The code to run when container is started:
-EXPOSE 8000
+# EXPOSE 80
 ENTRYPOINT ["conda", "run", "-n", "dvc_py38", "--no-capture-output", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

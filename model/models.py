@@ -69,8 +69,6 @@ class MLP_model(nn.Module):
 
     def accuracy(self, outputs, labels):
         _, preds = torch.max(outputs, dim=1)
-        # print("labels: ", labels)
-        # print("predictions: ", preds)
         return torch.tensor(torch.sum(preds == labels).item() / len(preds))
 
 
@@ -133,13 +131,11 @@ class Conv_model(nn.Module):
         out = self(infer_data)
         _, prediction = torch.max(out, dim=1)
         prediction = prediction.cpu().detach().numpy()
-        return data, prediction
+        return data, prediction, label
 
     def epoch_end(self, epoch, result):
         print("Epoch [{}], val_loss: {:.4f}, val_acc: {:.4f}".format(epoch, result['val_loss'], result['val_acc']))
 
     def accuracy(self, outputs, labels):
         _, preds = torch.max(outputs, dim=1)
-        # print("labels: ", labels)
-        # print("predictions: ", preds)
         return torch.tensor(torch.sum(preds == labels).item() / len(preds))

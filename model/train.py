@@ -121,6 +121,6 @@ class model_pipeline():
     """
     def infer(self, data_path):
         self.model.load_state_dict(torch.load(self.ckpt_path))
-        image, predict = self.model.inference_step(data_path)
-        return image, predict
+        image, predict, label = self.model.inference_step(data_path)
+        return image, predict, label
         

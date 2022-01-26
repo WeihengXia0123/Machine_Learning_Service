@@ -14,7 +14,7 @@ RUN mkdir /workspace
 COPY ./ /workspace/
 
 # Make RUN commands use the new environment:
-SHELL ["/bin/bash", "-c"]
+SHELL ["/bin/bash", "-c"] 
 RUN conda env create -f /workspace/environment.yml
 #RUN echo "source activate dvc_py38" > ~/.bashrc
 #ENV PATH /opt/conda/envs/dvc_py38/bin:$PATH
