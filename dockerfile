@@ -1,6 +1,6 @@
 FROM debian:latest
 
-RUN apt-get -qq update && apt-get -qq -y install curl bzip2 git gcc\
+RUN apt-get -qq update && apt-get -qq -y install curl bzip2 git gcc vim\
     && curl -sSL https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh \
     && bash /tmp/miniconda.sh -bfp /usr/local \
     && rm -rf /tmp/miniconda.sh

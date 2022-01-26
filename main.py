@@ -40,8 +40,8 @@ async def upload_data(data_path: str):
     return f"uploading data: {data_path}"
 
 
-@app.post("/start_training/")
-async def start_training():
+@app.post("/start_training/{train_epoch}")
+async def start_training(train_epoch: int):
     """
     A POST request to start the training with the latest data version
     """
@@ -50,7 +50,6 @@ async def start_training():
     # subprocess.run(["dvc", "pull"])
 
     # start the training
-    train_epoch = 2
     pipeline.train(train_epoch)
     app.last_epoch_number += train_epoch
     
