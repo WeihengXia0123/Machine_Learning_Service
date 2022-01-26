@@ -89,4 +89,4 @@ async def result(data_path : str):
     print("groundtruth label: ", label)
     # plt.imshow(image)
     # plt.show()
-    return [{"prediction digit": str(prediction)}, {"label", label}]
+    return [{"prediction digit": str(prediction)}, {"label": label}]
